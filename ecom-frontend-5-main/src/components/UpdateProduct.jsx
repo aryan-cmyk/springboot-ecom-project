@@ -22,13 +22,13 @@ const UpdateProduct = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:9090/api/product/${id}`
+          `http://localhost:9090/api/products/${id}`
         );
 
         setProduct(response.data);
       
         const responseImage = await axios.get(
-          `http://localhost:9090/api/product/${id}/image`,
+          `http://localhost:9090/api/products/${id}/image`,
           { responseType: "blob" }
         );
        const imageFile = await converUrlToFile(responseImage.data,response.data.imageName)
@@ -67,7 +67,7 @@ const UpdateProduct = () => {
 
   try {
     const response = await axios.put(
-      `http://localhost:9090/api/product/${id}`,
+      `http://localhost:9090/api/products/${id}`,
       formData,
       {
         headers: {

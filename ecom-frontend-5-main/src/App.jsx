@@ -11,6 +11,8 @@ import UpdateProduct from "./components/UpdateProduct";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import OrderHistory from "./components/OrderHistory";
+import AdminOrders from "./components/AdminOrders";
 
 
 function App() {
@@ -50,10 +52,12 @@ function App() {
             }
           />
           <Route path="/add_product" element={<AddProduct />} />
-          <Route path="/product" element={<Product  />} />
-          <Route path="product/:id" element={<Product  />} />
+          <Route path="/products" element={<Product  />} />
+          <Route path="products/:id" element={<Product  />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/product/update/:id" element={<UpdateProduct />} />
+          <Route path="/products/update/:id" element={<UpdateProduct />} />
+          <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
         </Routes>
       </BrowserRouter>
     </AppProvider>

@@ -283,7 +283,7 @@ const Cart = () => {
           updatedCartItems.map(async (item) => {
             try {
               const response = await axios.get(
-                `http://localhost:9090/api/product/${item.id}/image`,
+                `http://localhost:9090/api/products/${item.id}/image`,
                 { responseType: "blob" }
               );
               const imageFile = await converUrlToFile(response.data, response.data.imageName);
@@ -368,7 +368,7 @@ const Cart = () => {
         );
   
         await axios
-          .put(`http://localhost:9090/api/product/${item.id}`, cartProduct, {
+          .put(`http://localhost:9090/api/products/${item.id}`, cartProduct, {
             headers: {
               "Content-Type": "multipart/form-data",
             },

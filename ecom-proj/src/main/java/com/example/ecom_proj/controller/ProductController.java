@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     // Get single product by ID
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<?> getProduct(@PathVariable int id) {
         Product product = service.getProductById(id);
         if (product != null) {
@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     // Add a product with image
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<?> addProduct(@RequestPart("product") Product product,
                                         @RequestPart("image") MultipartFile image) {
         try {
@@ -69,7 +69,7 @@ public class ProductController {
     }
 
     // Get image by product ID
-    @GetMapping("product/{productId}/image")
+    @GetMapping("products/{productId}/image")
     public ResponseEntity<byte[]> getImageByProductId(@PathVariable int productId) {
         Product product = service.getProductById(productId);
         if (product != null && product.getImageDate() != null) {
@@ -83,7 +83,7 @@ public class ProductController {
     }
 
     // Update product and image
-    @PutMapping("/product/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable int id,
                                            @RequestPart("product") Product product,
                                            @RequestPart("image") MultipartFile image) throws IOException {
@@ -96,7 +96,7 @@ public class ProductController {
     }
 
     // Delete product by ID
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
         Product existing = service.getProductById(id);
         if (existing != null) {
