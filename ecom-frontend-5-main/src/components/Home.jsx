@@ -108,7 +108,7 @@ const Home = ({ selectedCategory }) => {
                 key={id}
               >
                 <Link
-                  to={`/product/${id}`}
+                  to={`/products/${id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <img

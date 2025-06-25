@@ -4,6 +4,7 @@ import { useState } from "react";
 import AppContext from "../Context/Context";
 import axios from "../axios";
 import UpdateProduct from "./UpdateProduct";
+
 const Product = () => {
   const { id } = useParams();
   const { data, addToCart, removeFromCart, cart, refreshData } =
@@ -146,7 +147,7 @@ const Product = () => {
             >
               Update
             </button>
-            {/* <UpdateProduct product={product} onUpdate={handleUpdate} /> */}
+            {/* <UpdateProduct product={products} onUpdate={handleUpdate} /> */}
             <button
               className="btn btn-primary"
               type="button"

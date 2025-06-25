@@ -22,7 +22,7 @@ const AdminOrders = () => {
           params: { status: newStatus },
         }
       );
-      fetchOrders(); // Refresh list
+      fetchOrders();
     } catch (error) {
       console.error("Error updating status:", error);
     }
@@ -33,103 +33,117 @@ const AdminOrders = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4" style={{color:"black"}}>Admin - Order Management</h2>
+    <div className="admin-orders-container">
+      <style>{`
+        .order-card {
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          padding: 16px;
+          background-color: #ffffff;
+        }
+
+        .order-header {
+          display: flex;
+          justify-content: space-between;
+          font-weight: bold;
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+
+        .order-item {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+          padding: 12px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 10px;
+        }
+
+        .order-item-details {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .order-buttons {
+          margin-top: 12px;
+          display: flex;
+          gap: 10px;
+        }
+
+        .btn {
+          padding: 8px 14px;
+          font-weight: bold;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+
+        .btn-warning {
+          background-color: #ffc107;
+        }
+
+        .btn-success {
+          background-color: #28a745;
+          color: white;
+        }
+          
+
+
+
+
+
+
+      `}</style>
+
+      <h2 style={{ textAlign: "center", color: "black" }}>Admin - Order Management</h2>
 
       {orders.length === 0 ? (
-        <p>No orders found.</p>
+        <p style={{ textAlign: "center" }}>No orders found.</p>
       ) : (
         orders.map((order) => (
-          <div
-            key={order.id}
-            className="card mb-4"
-            style={{
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              writingMode: "horizontal-tb",
-              width: "100%",
-              maxWidth: "100%",
-            }}
-          >
-            <div
-              className="card-header fw-bold"
-              style={{
-                fontSize: "1.1rem",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                whiteSpace: "nowrap",
-                overflowX: "auto",
-              }}
-            >
+          <div key={order.id} className="order-card">
+            <div className="order-header">
               <span>Order #{order.id}</span>
               <span>{order.customerEmail}</span>
             </div>
 
-            <div className="card-body">
-              <p>
-                <strong>Status:</strong> {order.status}
-              </p>
-              <p>
-                <strong>Items:</strong>
-              </p>
+            <p><strong>Status:</strong> {order.status}</p>
+            <p><strong>Address:</strong> {order.address}</p>
+            <p><strong>Items:</strong></p>
 
-              <div className="row">
-                {order.items.map((item, index) => (
-                  <div key={index} className="col-md-6 mb-3">
-                    <div className="card shadow-sm">
-                      <div className="card-body d-flex">
-                        {/* Optional Product Image */}
-                        {item.imageUrl && (
-                          <img
-                            src={item.imageUrl}
-                            alt={item.productName}
-                            style={{
-                              width: "80px",
-                              height: "80px",
-                              objectFit: "cover",
-                              marginRight: "15px",
-                              borderRadius: "5px",
-                            }}
-                          />
-                        )}
-                        {/* Product Info */}
-                        <div>
-                          <h6 className="mb-1">{item.productName}</h6>
-                          {item.productId && (
-                            <p className="mb-1">Product ID: {item.productId}</p>
-                          )}
-                          {item.price && (
-                            <p className="mb-1">Price: ₹{item.price}</p>
-                          )}
-                          <p className="mb-1">Quantity: {item.quantity}</p>
-                          {item.price && (
-                            <p className="mb-0">
-                              Total: ₹{item.quantity * item.price}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+            {order.items.length === 0 ? (
+              <p>No items found in this order.</p>
+            ) : (
+              order.items.map((item, index) => (
+                <div key={index} className="order-item">
+                  {item.imageUrl && (
+                    <img
+                      src={item.imageUrl}
+                      alt={item.productName}
+                      style={{ width: '80px', height: '80px', borderRadius: '8px', objectFit: 'cover' }}
+                    />
+                  )}
+                  <div className="order-item-details">
+                    <span><strong>{item.productName}</strong></span>
+                    <span>Product ID: {item.productId}</span>
+                    <span>Price: ${item.price}</span>
+                    <span>Quantity: {item.quantity}</span>
+                    <span><strong>Total: ${item.price * item.quantity}</strong></span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))
+            )}
 
-              <div className="mt-3">
-                <button
-                  className="btn btn-warning me-2"
-                  onClick={() => updateStatus(order.id, "SHIPPED")}
-                >
-                  Mark as Shipped
-                </button>
-                <button
-                  className="btn btn-success"
-                  onClick={() => updateStatus(order.id, "DELIVERED")}
-                >
-                  Mark as Delivered
-                </button>
-              </div>
+            <div className="order-buttons">
+              <button className="btn btn-warning" onClick={() => updateStatus(order.id, "SHIPPED")}>
+                Mark as Shipped
+              </button>
+              <button className="btn btn-success" onClick={() => updateStatus(order.id, "DELIVERED")}>
+                Mark as Delivered
+              </button>
             </div>
           </div>
         ))
