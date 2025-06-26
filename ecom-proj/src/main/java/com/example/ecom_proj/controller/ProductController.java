@@ -57,7 +57,11 @@ public class ProductController {
     }
 
     // Add a product with image
-    @PostMapping("/products")
+    @PostMapping(
+        value = "/products",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<?> addProduct(@RequestPart("product") Product product,
                                         @RequestPart("image") MultipartFile image) {
         try {
@@ -84,16 +88,17 @@ public class ProductController {
 
     // Update product and image
     @PutMapping("/products/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable int id,
-                                           @RequestPart("product") Product product,
-                                           @RequestPart("image") MultipartFile image) throws IOException {
-        Product updatedProduct = service.updateProduct(id, product, image);
-        if (updatedProduct != null) {
-            return new ResponseEntity<>(Map.of("message", "Product updated successfully"), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(Map.of("message", "Failed to update product"), HttpStatus.BAD_REQUEST);
-        }
+public ResponseEntity<?> updateProduct(@PathVariable int id,
+                                       @RequestPart("product") Product product,
+                                       @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+    Product updatedProduct = service.updateProduct(id, product, image);
+    if (updatedProduct != null) {
+        return new ResponseEntity<>(Map.of("message", "Product updated successfully"), HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>(Map.of("message", "Failed to update product"), HttpStatus.BAD_REQUEST);
     }
+}
+
 
     // Delete product by ID
     @DeleteMapping("/products/{id}")

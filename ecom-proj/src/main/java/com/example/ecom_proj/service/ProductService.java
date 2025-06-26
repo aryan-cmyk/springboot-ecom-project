@@ -36,13 +36,35 @@ public class ProductService implements IProductService  {
     }
 
 
-    public Product updateProduct(int id, Product product, MultipartFile image) throws IOException {
-        product.setImageDate(image.getBytes());  
-        product.setImageName(image.getOriginalFilename()); 
-        product.setImageType(image.getContentType());
-        return  repo.save(product);
+   public Product updateProduct(int id, Product updatedProduct, MultipartFile image) throws IOException {
+    // Fetch existing product from DB
+    Product existing = repo.findById(id).orElse(null);
 
+    if (existing == null) {
+        return null; // or throw custom exception
     }
+
+    // Update fields
+    existing.setName(updatedProduct.getName());
+    existing.setDescription(updatedProduct.getDescription());
+    existing.setBrand(updatedProduct.getBrand());
+    existing.setPrice(updatedProduct.getPrice());
+    existing.setCategory(updatedProduct.getCategory());
+    existing.setReleaseDate(updatedProduct.getReleaseDate());
+    existing.setProductAvailable(updatedProduct.isProductAvailable());
+    existing.setStockQuantity(updatedProduct.getStockQuantity());
+
+    // Update image only if a new one is provided
+    if (image != null && !image.isEmpty()) {
+        existing.setImageDate(image.getBytes());
+        existing.setImageName(image.getOriginalFilename());
+        existing.setImageType(image.getContentType());
+    }
+
+    // Save updated product
+    return repo.save(existing);
+}
+
 
 
     public void deleteProduct(int id) {

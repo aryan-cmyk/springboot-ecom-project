@@ -13,6 +13,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OrderHistory from "./components/OrderHistory";
 import AdminOrders from "./components/AdminOrders";
+import ProductReviewsPage from "./components/ProductReviewsPage";
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
           <Route path="/products/update/:id" element={<UpdateProduct />} />
           <Route path="/orders" element={<OrderHistory />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/product/:productId/reviews" element={<ProductReviewsPage />} />
         </Routes>
       </BrowserRouter>
     </AppProvider>
