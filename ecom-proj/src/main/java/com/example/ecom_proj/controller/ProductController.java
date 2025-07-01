@@ -1,6 +1,7 @@
 package com.example.ecom_proj.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.ecom_proj.model.Product;
 import com.example.ecom_proj.service.ProductService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin
+@Validated
 @RequestMapping("/api")
 public class ProductController {
 
@@ -57,20 +63,33 @@ public class ProductController {
     }
 
     // Add a product with image
-    @PostMapping(
-        value = "/products",
-        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<?> addProduct(@RequestPart("product") Product product,
-                                        @RequestPart("image") MultipartFile image) {
-        try {
-            Product saved = service.addProduct(product, image);
-            return new ResponseEntity<>(saved, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+   @PostMapping(
+    value = "/products",
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addProduct(@RequestPart("product") @Valid Product product,
+                                    BindingResult bindingResult,
+                                    @RequestPart("image") MultipartFile image) {
+    if (bindingResult.hasErrors()) {
+        Map<String, String> errors = new HashMap<>();
+        bindingResult.getFieldErrors().forEach(error ->
+            errors.put(error.getField(), error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
     }
+
+    // Optional image validation
+    if (image == null || image.isEmpty()) {
+        return ResponseEntity.badRequest().body(Map.of("image", "Image is required"));
+    }
+
+    try {
+        Product saved = service.addProduct(product, image);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    } catch (Exception e) {
+        return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
 
     // Get image by product ID
     @GetMapping("products/{productId}/image")
